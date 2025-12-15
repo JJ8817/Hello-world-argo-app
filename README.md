@@ -1,2 +1,2 @@
 # Jamf-project
-Project for Jamf
+CI/CD project for Jamf
