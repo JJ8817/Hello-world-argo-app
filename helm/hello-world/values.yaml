@@ -1,0 +1,17 @@
+replicaCount: 1
+
+image:
+  repository: jj1729/hello-world-flask
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 5000
+
+resources: {}
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
