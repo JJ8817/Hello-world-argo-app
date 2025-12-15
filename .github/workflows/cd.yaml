@@ -1,0 +1,72 @@
+name: CD
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to deploy to"
+        required: true
+        default: "staging"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      IMAGE_NAME: your-dockerhub-username/hello-world-flask
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: "v1.30.0"
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: "v3.15.0"
+
+      - name: Select environment
+        id: envselect
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            ENV="${{ github.event.inputs.environment }}"
+          else
+            ENV="staging"
+          fi
+          echo "env=$ENV" >> $GITHUB_OUTPUT
+
+      - name: Set namespace and values file
+        id: cfg
+        run: |
+          if [ "${{ steps.envselect.outputs.env }}" = "production" ]; then
+            NS="hello-production"
+            VALUES="helm/hello-world/values-production.yaml"
+            TAG="prod"
+          else
+            NS="hello-staging"
+            VALUES="helm/hello-world/values-staging.yaml"
+            TAG="${GITHUB_SHA}"
+          fi
+          echo "namespace=$NS" >> $GITHUB_OUTPUT
+          echo "values=$VALUES" >> $GITHUB_OUTPUT
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+      - name: Create namespace if needed
+        run: |
+          kubectl get namespace ${{ steps.cfg.outputs.namespace }} \
+            || kubectl create namespace ${{ steps.cfg.outputs.namespace }}
+
+      - name: Deploy with Helm
+        run: |
+          helm upgrade --install hello-world \
+            helm/hello-world \
+            --namespace ${{ steps.cfg.outputs.namespace }} \
+            -f ${{ steps.cfg.outputs.values }} \
+            --set image.repository=${{ env.IMAGE_NAME }} \
+            --set image.tag=${{ steps.cfg.outputs.tag }}
