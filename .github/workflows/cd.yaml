@@ -18,6 +18,12 @@ jobs:
       IMAGE_NAME: your-dockerhub-username/hello-world-flask
 
     steps:
+      - name: Create kind cluster
+        uses: helm/kind-action@v1
+        with:
+          cluster_name: jamf-ci-cd
+          wait_for_ready: true
+          
       - name: Checkout
         uses: actions/checkout@v4
 
