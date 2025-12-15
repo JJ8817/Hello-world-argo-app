@@ -1,6 +1,6 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
-meta
+metadata:
   name: hello-world-staging
   namespace: argocd
 spec:
@@ -11,7 +11,7 @@ spec:
     path: .
     helm:
       valueFiles:
-      - values-staging.yaml
+        - values-staging.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: hello-staging
