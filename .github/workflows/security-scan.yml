@@ -92,7 +92,7 @@ jobs:
         with:
           sarif_file: 'trivy-container.sarif'
 
-  deploy-kind-test:
+deploy-kind-test:
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
