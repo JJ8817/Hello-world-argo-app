@@ -6,7 +6,7 @@ meta
 spec:
   project: default
   source:
-    repoURL: https://github.com/JJ8817/Jamf-project.git
+    repoURL: https://github.com/JJ8817/Hello-world-argo-app.git
     targetRevision: HEAD
     path: .
     helm:
@@ -35,7 +35,7 @@ meta
 spec:
   project: default
   source:
-    repoURL: https://github.com/JJ8817/Jamf-project.git
+    repoURL: https://github.com/JJ8817/Hello-world-argo-app.git
     targetRevision: HEAD
     path: .
     helm:
