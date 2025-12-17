@@ -116,4 +116,3 @@ jobs:
       
       - name: Set up kubectl
         uses: azure/setup-kubectl@v4
-        with
