@@ -67,7 +67,15 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      
+
+      - name: Pull Docker image
+        run: |
+          docker pull ghcr.io/jj8817/hello-world-flask:${{ github.sha }}
+
+      - name: Load image to kind
+        run: |
+          kind load docker-image ghcr.io/jj8817/hello-world-flask:${{ github.sha }} --name hw-ci-cd 
+
       - name: Build and push image
         uses: docker/build-push-action@v6
         with:
