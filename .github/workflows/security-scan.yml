@@ -68,13 +68,14 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Pull Docker image
-        run: |
-          docker pull ghcr.io/jj8817/hello-world-flask:${{ github.sha }}
-
-      - name: Load image to kind
-        run: |
-          kind load docker-image ghcr.io/jj8817/hello-world-flask:${{ github.sha }} --name hw-ci-cd 
+      # ❌ REMOVE these (they cause manifest unknown and kind errors)
+      # - name: Pull Docker image
+      #   run: |
+      #     docker pull ghcr.io/jj8817/hello-world-flask:${{ github.sha }}
+      #
+      # - name: Load image to kind
+      #   run: |
+      #     kind load docker-image ghcr.io/jj8817/hello-world-flask:${{ github.sha }} --name hw-ci-cd 
 
       - name: Build and push image
         uses: docker/build-push-action@v6
@@ -139,12 +140,12 @@ jobs:
         run: |
           if [ "${{ steps.envselect.outputs.env }}" = "production" ]; then
             NS="hello-production"
-            VALUES="helm/hello-world/values-production.yaml"
+            VALUES="helm/values-prod.yaml"
           else
             NS="hello-staging"
-            VALUES="helm/hello-world/values-staging.yaml"
+            VALUES="helm/values-staging.yaml"
           fi
-          TAG="latest"
+          TAG="${GITHUB_SHA}"
           echo "namespace=$NS" >> $GITHUB_OUTPUT
           echo "values=$VALUES" >> $GITHUB_OUTPUT
           echo "tag=$TAG" >> $GITHUB_OUTPUT
@@ -160,7 +161,7 @@ jobs:
       - name: Deploy with Helm to Kind
         run: |
           helm upgrade --install hello-world \
-            helm/hello-world \
+            helm \
             --namespace ${{ steps.cfg.outputs.namespace }} \
             -f ${{ steps.cfg.outputs.values }} \
             --set image.repository=${{ env.IMAGE_NAME }} \
@@ -197,7 +198,7 @@ jobs:
       
       - name: Update ArgoCD manifests
         run: |
-          TAG="${{ github.sha }}"
+          TAG="${GITHUB_SHA}"
           if [ -f "argocd/hello-world-staging.yaml" ]; then
             yq e ".spec.source.helm.parameters[0].value = \"$TAG\"" -i argocd/hello-world-staging.yaml || echo "No staging manifest or update failed"
           fi
