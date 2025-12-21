@@ -1,5 +1,10 @@
 replicaCount: 2
 
 image:
-  tag: "prod"
+  repository: ghcr.io/jj8817/hello-world-flask
+  tag: prod
   pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 80
