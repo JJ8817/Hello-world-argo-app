@@ -1,3 +1,4 @@
+# Two ArgoCD Application resources in one file (keeps intent, but uses the GHCR repo and safer parameter values)
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -11,12 +12,12 @@ spec:
     path: helm/hello-world
     helm:
       valueFiles:
-        - values-staging.yaml
+      - values-staging.yaml
       parameters:
-        - name: image.tag
-          value: e91b36555af8b55f77c47cc27c92f1ecb9ebce95
-        - name: image.repository
-          value: ghcr.io/jj8817/hello-world-flask
+      - name: image.tag
+        value: e91b36555af8b55f77c47cc27c92f1ecb9ebce95
+      - name: image.repository
+        value: ghcr.io/jj8817/hello-world-flask
   destination:
     server: https://kubernetes.default.svc
     namespace: hello-staging
@@ -25,4 +26,33 @@ spec:
       prune: true
       selfHeal: true
     syncOptions:
-      - CreateNamespace=true
+    - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hello-world-production
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/JJ8817/Hello-world-argo-app.git
+    targetRevision: HEAD
+    path: helm/hello-world
+    helm:
+      valueFiles:
+      - values-prod.yaml
+      parameters:
+      - name: image.tag
+        value: prod
+      - name: image.repository
+        value: ghcr.io/jj8817/hello-world-flask
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: hello-production
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true

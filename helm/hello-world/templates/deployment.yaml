@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: hello-world
-          # Use single-quoted template + printf/default to avoid nested-quote parse issues
+          # Build the image string with printf and default to avoid nested quote parse errors
           image: '{{ printf "%s:%s" .Values.image.repository (default "latest" .Values.image.tag) }}'
           imagePullPolicy: {{ .Values.image.pullPolicy | default "IfNotPresent" }}
           ports:

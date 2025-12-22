@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: jj1729/hello-world-flask
+  repository: ghcr.io/jj8817/hello-world-flask
   tag: "latest"
   pullPolicy: IfNotPresent
 

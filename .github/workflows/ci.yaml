@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      IMAGE_NAME: jj1729/hello-world-flask
+      IMAGE_NAME: ghcr.io/jj8817/hello-world-flask
 
     steps:
       - name: Checkout
