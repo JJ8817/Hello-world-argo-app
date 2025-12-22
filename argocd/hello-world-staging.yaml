@@ -12,12 +12,12 @@ spec:
     path: helm/hello-world
     helm:
       valueFiles:
-      - values-staging.yaml
+        - values-staging.yaml
       parameters:
-      - name: image.tag
-        value: e91b36555af8b55f77c47cc27c92f1ecb9ebce95
-      - name: image.repository
-        value: ghcr.io/jj8817/hello-world-flask
+        - name: image.tag
+          value: 98dec4e49114c9dc3d4c08fa3fed6a63c1e0d244
+        - name: image.repository
+          value: ghcr.io/jj8817/hello-world-flask
   destination:
     server: https://kubernetes.default.svc
     namespace: hello-staging
@@ -26,7 +26,7 @@ spec:
       prune: true
       selfHeal: true
     syncOptions:
-    - CreateNamespace=true
+      - CreateNamespace=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -41,12 +41,12 @@ spec:
     path: helm/hello-world
     helm:
       valueFiles:
-      - values-prod.yaml
+        - values-prod.yaml
       parameters:
-      - name: image.tag
-        value: prod
-      - name: image.repository
-        value: ghcr.io/jj8817/hello-world-flask
+        - name: image.tag
+          value: 98dec4e49114c9dc3d4c08fa3fed6a63c1e0d244
+        - name: image.repository
+          value: ghcr.io/jj8817/hello-world-flask
   destination:
     server: https://kubernetes.default.svc
     namespace: hello-production
@@ -55,4 +55,4 @@ spec:
       prune: true
       selfHeal: true
     syncOptions:
-    - CreateNamespace=true
+      - CreateNamespace=true
