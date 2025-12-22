@@ -91,7 +91,7 @@ jobs:
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: 'trivy-container.sarif'
-      
+
   deploy-kind-test:
     needs: build-and-push
     runs-on: ubuntu-latest
@@ -131,10 +131,10 @@ jobs:
         run: |
           if [ "${{ steps.envselect.outputs.env }}" = "production" ]; then
             NS="hello-production"
-            VALUES="helm/values-prod.yaml"
+            VALUES="helm/hello-world/values-prod.yaml"
           else
             NS="hello-staging"
-            VALUES="helm/values-staging.yaml"
+            VALUES="helm/hello-world/values-staging.yaml"
           fi
           TAG="${GITHUB_SHA}"
           echo "namespace=$NS" >> $GITHUB_OUTPUT
@@ -156,7 +156,7 @@ jobs:
       - name: Deploy with Helm to Kind
         run: |
           helm upgrade --install hello-world \
-            helm \
+            helm/hello-world \
             --namespace ${{ steps.cfg.outputs.namespace }} \
             -f ${{ steps.cfg.outputs.values }} \
             --set image.repository=${{ env.IMAGE_NAME }} \
