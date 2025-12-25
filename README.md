@@ -138,6 +138,7 @@ minikube service hello-world-staging -n hello-staging --url
 
 # Test the endpoint
 curl http://localhost:5001
+
 # Expected output: Hello world
 ```
 
