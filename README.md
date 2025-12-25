@@ -129,12 +129,12 @@ argocd app sync hello-world-staging
 
 ```bash
 # Method 1: Port forwarding
-kubectl port-forward -n hello-staging svc/hello-world 5000:5000
+kubectl port-forward -n hello-world-staging svc/hello-world 5000:5000
 
 # Then access at http://localhost:5000
 
 # Method 2: Minikube service (recommended for local testing)
-minikube service hello-world -n hello-staging --url
+minikube service hello-world -n hello-world-staging --url
 
 # Test the endpoint
 curl http://localhost:5000
